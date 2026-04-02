@@ -30,8 +30,14 @@
 - [ ] 5.4 Add GHCR login using `GITHUB_TOKEN` and optional Docker Hub login using secrets
 - [ ] 5.5 Add build-and-push step with version tag (stripped `v` prefix) and `latest` tag, passing OCI label build args from git context
 
-## 6. Documentation
+## 6. Proto Contract Check
 
-- [ ] 6.1 Update README.md — add CI badge, update Docker section with new build/run commands, document release process and image registries
-- [ ] 6.2 Update README.md — document Docker Compose usage and Delta-V stack integration
-- [ ] 6.3 Update README.md — add "Configuring Secrets" section with step-by-step instructions for setting up `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` in GitHub repo settings, and explain that GHCR uses the built-in `GITHUB_TOKEN` automatically
+- [ ] 6.1 Create `.github/workflows/proto-check.yml` — scheduled weekly (cron) and manual `workflow_dispatch`, fetches `sink-message.proto` and `collectionset.proto` from delta-v `main` branch, regenerates Python bindings, runs `pytest` against them
+- [ ] 6.2 Add step to open a GitHub issue automatically if tests fail, with title "Proto contract break detected" and the failing test output in the body
+
+## 7. Documentation
+
+- [ ] 7.1 Update README.md — add CI badge, update Docker section with new build/run commands, document release process and image registries
+- [ ] 7.2 Update README.md — document Docker Compose usage and Delta-V stack integration
+- [ ] 7.3 Update README.md — add "Configuring Secrets" section with step-by-step instructions for setting up `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` in GitHub repo settings, and explain that GHCR uses the built-in `GITHUB_TOKEN` automatically
+- [ ] 7.4 Update README.md — document the weekly proto contract check workflow and what to do when a break is detected

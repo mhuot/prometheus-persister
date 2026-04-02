@@ -151,6 +151,13 @@ make push
 ### Adding to Delta-V Stack
 Copy the `prometheus-persister` service block from `docker-compose.yml` into the Delta-V `opennms-container/delta-v/docker-compose.yml`, adjusting the `KAFKA_BOOTSTRAP_SERVERS` and `REMOTE_WRITE_URL` for the target environment.
 
+### 7. Proto contract check workflow
+- **Decision**: Weekly scheduled GitHub Actions workflow that fetches the latest proto files from delta-v `main`, regenerates Python bindings, runs the test suite, and opens a GitHub issue if tests fail.
+- **Rationale**: The proto files are the contract between delta-v and this project. If delta-v changes the `CollectionSet` or `SinkMessage` schema, our transformer and consumer will break at runtime. This catches it within a week (or on-demand via `workflow_dispatch`) without needing containers or a running delta-v instance.
+- **Proto fetch**: Use `gh api` or raw GitHub URL to download individual proto files — no full clone needed (~100ms vs ~30s).
+- **Issue deduplication**: Check for existing open issues with the same title before creating a new one to avoid spam.
+- **Alternatives**: Git submodule (couples repos too tightly), manual periodic check (easy to forget), proto registry (requires delta-v changes).
+
 ## Risks / Trade-offs
 
 - **[Risk] Multi-arch build time** → ARM64 cross-compilation can be slow in CI. Mitigation: Use QEMU emulation via `docker/setup-qemu-action`; accept ~5 min overhead.

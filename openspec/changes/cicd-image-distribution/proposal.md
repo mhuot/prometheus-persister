@@ -16,6 +16,7 @@ The prometheus-persister has a basic Dockerfile but no CI/CD pipeline and the im
 - `ci-pipeline`: GitHub Actions workflow for linting, testing, and building the Docker image on push/PR.
 - `release-pipeline`: GitHub Actions workflow for building and publishing multi-arch container images on tagged releases.
 - `container-conventions`: Dockerfile aligned with Delta-V practices — OCI labels, non-root user, health check, STOPSIGNAL, entrypoint script.
+- `proto-contract-check`: Weekly scheduled workflow that validates tests against latest Delta-V proto files and opens an issue on breaking changes.
 
 ### Modified Capabilities
 _(none)_
