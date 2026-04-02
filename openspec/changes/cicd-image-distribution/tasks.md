@@ -34,3 +34,4 @@
 
 - [ ] 6.1 Update README.md — add CI badge, update Docker section with new build/run commands, document release process and image registries
 - [ ] 6.2 Update README.md — document Docker Compose usage and Delta-V stack integration
+- [ ] 6.3 Update README.md — add "Configuring Secrets" section with step-by-step instructions for setting up `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` in GitHub repo settings, and explain that GHCR uses the built-in `GITHUB_TOKEN` automatically
