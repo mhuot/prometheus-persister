@@ -357,3 +357,60 @@ With OTLP export enabled, Grafana Cloud receives:
 - **Logs**: JSON-structured logs with `trace_id` and `span_id` for correlation — visible in Grafana Explore with the Loki data source.
 
 > **Note:** The `/metrics` Prometheus endpoint on port 8000 continues to work regardless of OTLP export. Both can run simultaneously.
+
+## Troubleshooting
+
+### Kafka connection refused
+
+**Symptom:** Persister logs show `KafkaException: ... Connection refused` or `messages_consumed` stays at `0`.
+
+**Causes and fixes:**
+- **Wrong broker address:** Verify `KAFKA_BOOTSTRAP_SERVERS` matches your Delta-V Kafka. Test with: `kcat -b your-broker:9092 -L`
+- **Network/firewall:** Ensure port 9092 is reachable from the persister host. In Docker, ensure both containers are on the same network.
+- **Kafka not ready:** If running in Docker Compose, ensure `depends_on` with `condition: service_healthy` is set.
+
+### Remote-Write 401 or 403
+
+**Symptom:** Logs show `Remote-Write client error 401` or `403`.
+
+**Causes and fixes:**
+- **Wrong instance ID:** The `REMOTE_WRITE_USERNAME` must be the numeric instance ID from Grafana Cloud, not your email.
+- **Invalid API key:** Regenerate the token in **Security > Access Policies**. Ensure the policy has `metrics:write` scope.
+- **URL mismatch:** The endpoint must end in `/api/prom/push`. Double-check the region in the URL matches your Grafana Cloud stack.
+
+### No metrics appearing in Grafana
+
+**Symptom:** `samples_written` is increasing but Grafana Explore shows no results.
+
+**Causes and fixes:**
+- **Wrong data source:** Ensure you selected the **Prometheus** data source in Explore, not a different one.
+- **Query too specific:** Start with `{host_id!=""}` to match any Delta-V metric.
+- **Ingestion delay:** Grafana Cloud may take 1-2 minutes to make newly ingested metrics queryable. Wait and retry.
+- **Label cardinality limits:** Free-tier Grafana Cloud has cardinality limits. Check the Grafana Cloud usage page for any warnings.
+
+### High consumer lag
+
+**Symptom:** `messages_consumed` is increasing slowly, or Kafka consumer group shows growing lag.
+
+**Causes and fixes:**
+- **Slow Remote-Write endpoint:** Check `write_latency` histogram. If high (>5s), the Grafana Cloud endpoint may be throttling. Reduce `batching.max_size` or increase `batching.flush_interval`.
+- **Large CollectionSets:** If Minions collect thousands of metrics per cycle, each message produces many samples. This is expected — monitor `batch_size` to tune.
+- **Scale horizontally:** Run multiple persister instances with the same `consumer_group`. Kafka will partition the load automatically.
+
+### Chunk reassembly timeouts
+
+**Symptom:** `chunk_reassembly_timeouts` counter is increasing.
+
+**Causes and fixes:**
+- **Kafka message ordering:** Chunk reassembly requires all chunks of a message to arrive within the TTL (default 60s). If Kafka partitions are rebalancing frequently, chunks may be lost.
+- **Increase TTL:** Set `chunk_reassembly.ttl` to a higher value (e.g., 120) in config.
+- **Check Minion health:** Incomplete chunks often indicate a Minion that disconnected mid-publish. Check Minion logs.
+
+### Persister crashes or restarts
+
+**Symptom:** Container keeps restarting or Python process exits.
+
+**Causes and fixes:**
+- **Check logs:** `docker logs delta-v-prometheus-persister` or the stderr output for Python errors.
+- **OOM:** If processing very high volumes, increase container memory limits.
+- **Config errors:** Ensure `config.yaml` is valid YAML and all required fields are set. The persister validates config at startup and logs specific errors.
