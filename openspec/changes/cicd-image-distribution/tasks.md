@@ -18,9 +18,9 @@
 
 ## 4. CI Workflow
 
-- [ ] 4.1 Create `.github/workflows/ci.yml` — trigger on push to main and PRs
-- [ ] 4.2 Add steps: checkout, setup Python 3.11, pip install with caching, proto generation, black check, pylint, pytest
-- [ ] 4.3 Add Docker build step (build only, no push) to validate the Dockerfile
+- [x] 4.1 Create `.github/workflows/ci.yml` — trigger on push to main and PRs
+- [x] 4.2 Add steps: checkout, setup Python 3.11, pip install with caching, proto generation, black check, pylint, pytest
+- [x] 4.3 Add Docker build step (build only, no push) to validate the Dockerfile
 
 ## 5. Release Workflow
 

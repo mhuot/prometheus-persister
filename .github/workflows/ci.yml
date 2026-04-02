@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Generate protobuf bindings
+        run: make proto
+
+      - name: Check formatting
+        run: black --check prometheus_persister tests
+
+      - name: Lint
+        run: pylint prometheus_persister
+
+      - name: Run tests
+        run: pytest --tb=short
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: prometheus-persister:ci
+          build-args: |
+            VERSION=ci
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            REVISION=${{ github.sha }}
+            BUILD_BRANCH=${{ github.ref_name }}
