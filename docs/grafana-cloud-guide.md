@@ -258,3 +258,58 @@ If this returns `0`, Minions are not publishing to Kafka.
    ```
 
 If no results appear, wait 1-2 minutes for the first batch to flush, then retry. If still empty, check the persister logs for Remote-Write errors.
+
+## Step 5: Build Dashboards
+
+### Example PromQL Queries
+
+Use these in Grafana Cloud dashboards (via **Dashboards > New dashboard > Add visualization**):
+
+**Interface traffic by host (bytes/sec):**
+```promql
+rate(mib2_interfaces_ifInOctets_total{host_name=~".+"}[5m])
+```
+
+**Top 10 hosts by inbound traffic:**
+```promql
+topk(10, rate(mib2_interfaces_ifInOctets_total[5m]))
+```
+
+**CPU load by node:**
+```promql
+net_snmp_hrSystemProcesses{host_name=~".+"}
+```
+
+**All metrics for a specific host:**
+```promql
+{host_name="router1"}
+```
+
+**Response time by target:**
+```promql
+icmp_response_time{deltav_instance=~".+"}
+```
+
+### Label Filters
+
+All Delta-V metrics include these labels for filtering and grouping:
+
+| Label | Description | Example |
+|:---|:---|:---|
+| `host_id` | Node ID | `42` |
+| `host_name` | Node label | `router1` |
+| `deltav_location` | Monitoring location | `Default` |
+| `deltav_instance` | Interface or resource instance | `eth0` |
+| `deltav_resource_type` | Resource type | `interfaceSnmp` |
+| `deltav_resource_id` | Full resource path | `node[42].interfaceSnmp[eth0]` |
+
+### Quick Dashboard Setup
+
+1. Go to **Dashboards > New dashboard**
+2. Click **Add visualization**
+3. Select your **Prometheus** data source
+4. Paste one of the PromQL queries above
+5. Set the **Legend** to `{{host_name}} - {{deltav_instance}}` for readable labels
+6. Repeat for additional panels
+
+> **Tip:** Use the `host_name` label in dashboard variables to create a host selector dropdown: **Dashboard settings > Variables > New variable** with query `label_values(host_name)`.
