@@ -7,7 +7,7 @@
 - [x] 1.5 Write "Deploy Standalone" section — venv setup, pip install, proto generation, config, and run commands
 - [x] 1.6 Write "Verify Metrics Flow" section — check /metrics endpoint for counters, PromQL query in Grafana Explore to confirm Delta-V metrics, expected label examples
 - [x] 1.7 Write "Example Dashboard" section — PromQL queries for interface traffic, node metrics, top-N panels; include ready-to-use dashboard JSON snippet
-- [ ] 1.8 Write "Monitor the Persister with OTel" section — configure OTEL_EXPORTER_OTLP_ENDPOINT for Grafana Cloud OTLP, verify traces and persister metrics in Grafana Cloud
+- [x] 1.8 Write "Monitor the Persister with OTel" section — configure OTEL_EXPORTER_OTLP_ENDPOINT for Grafana Cloud OTLP, verify traces and persister metrics in Grafana Cloud
 - [ ] 1.9 Write "Troubleshooting" section — Kafka connection refused, 401/403 auth errors, no metrics in Grafana, high consumer lag, chunk reassembly timeouts, each with cause and fix
 
 ## 2. README Integration Section

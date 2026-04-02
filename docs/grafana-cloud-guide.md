@@ -313,3 +313,47 @@ All Delta-V metrics include these labels for filtering and grouping:
 6. Repeat for additional panels
 
 > **Tip:** Use the `host_name` label in dashboard variables to create a host selector dropdown: **Dashboard settings > Variables > New variable** with query `label_values(host_name)`.
+
+## Step 6: Monitor the Persister with OTel
+
+The persister instruments itself with OpenTelemetry. You can send its own metrics, traces, and logs to Grafana Cloud for full-stack observability.
+
+### Get Your Grafana Cloud OTLP Endpoint
+
+1. In the Grafana Cloud portal, go to **Infrastructure > OpenTelemetry**
+2. Note the **OTLP endpoint** (e.g., `https://otlp-gateway-prod-us-east-0.grafana.net/otlp`)
+3. You'll use the same instance ID and API key from [Step 1](#step-1-grafana-cloud-setup)
+
+### Configure OTLP Export
+
+Add these environment variables to your deployment:
+
+```bash
+OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp-gateway-prod-us-east-0.grafana.net/otlp
+OTEL_EXPORTER_OTLP_HEADERS="Authorization=Basic $(echo -n '123456:glc_eyJ...' | base64)"
+```
+
+For Docker Compose, add to your `environment:` block:
+
+```yaml
+    environment:
+      # ... existing Kafka and Remote-Write vars ...
+      OTEL_EXPORTER_OTLP_ENDPOINT: "https://otlp-gateway-prod-us-east-0.grafana.net/otlp"
+      OTEL_EXPORTER_OTLP_HEADERS: "Authorization=Basic <base64-encoded instance_id:api_key>"
+```
+
+Generate the base64 value:
+
+```bash
+echo -n '123456:glc_eyJ...' | base64
+```
+
+### What You Get
+
+With OTLP export enabled, Grafana Cloud receives:
+
+- **Metrics**: `prometheus_persister.messages_consumed`, `samples_written`, `write_errors`, `write_latency`, etc. — visible in Grafana Explore with the Prometheus data source.
+- **Traces**: Spans for `consume_message` → `transform_collectionset` → `remote_write_batch` — visible in Grafana Explore with the Tempo data source. Useful for debugging latency in the pipeline.
+- **Logs**: JSON-structured logs with `trace_id` and `span_id` for correlation — visible in Grafana Explore with the Loki data source.
+
+> **Note:** The `/metrics` Prometheus endpoint on port 8000 continues to work regardless of OTLP export. Both can run simultaneously.
