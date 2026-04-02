@@ -38,7 +38,7 @@ def main() -> None:
         message_handler=handle_payload,
     )
 
-    def shutdown_handler(signum, frame):
+    def shutdown_handler(signum, frame):  # pylint: disable=unused-argument
         signal_name = signal.Signals(signum).name
         logger.info("Received %s, shutting down...", signal_name)
         consumer.stop()

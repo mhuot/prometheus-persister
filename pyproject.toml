@@ -43,7 +43,17 @@ target-version = ["py311"]
 
 [tool.pylint.main]
 max-line-length = 88
-disable = ["C0114", "C0115", "C0116"]
+disable = [
+    "C0114", "C0115", "C0116",
+    "E0611",   # no-name-in-module (protobuf generated code)
+    "W0718",   # broad-exception-caught (intentional in consumer/transformer)
+    "W0212",   # protected-access (confluent-kafka _PARTITION_EOF)
+    "R0902",   # too-many-instance-attributes (Instruments dataclass)
+    "R0903",   # too-few-public-methods (Instruments container)
+    "R0914",   # too-many-locals (transform function)
+    "C0103",   # invalid-name (module-level _tracer, _meter, _instruments)
+    "W0603",   # global-statement (OTel init pattern)
+]
 ignore-patterns = [".*_pb2\\.py"]
 
 [tool.pytest.ini_options]

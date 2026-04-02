@@ -7,8 +7,6 @@ from typing import Callable, Optional
 
 from confluent_kafka import Consumer, KafkaError, KafkaException
 
-from opentelemetry import trace
-
 from prometheus_persister.config import PersisterConfig
 from prometheus_persister.observability import get_instruments, get_tracer
 from prometheus_persister.proto.sink_message_pb2 import SinkMessage
