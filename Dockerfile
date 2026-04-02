@@ -37,6 +37,7 @@ RUN apt-get update && \
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
+COPY entrypoint.sh .
 COPY prometheus_persister/ prometheus_persister/
 COPY --from=builder /app/prometheus_persister/proto/ prometheus_persister/proto/
 COPY config.yaml .
@@ -66,4 +67,4 @@ STOPSIGNAL SIGTERM
 HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=30s \
     CMD curl -sf http://localhost:8000/metrics || exit 1
 
-ENTRYPOINT ["python", "-m", "prometheus_persister"]
+ENTRYPOINT ["/app/entrypoint.sh"]
