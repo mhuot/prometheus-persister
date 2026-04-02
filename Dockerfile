@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir .
 
 COPY proto/ proto/
 RUN pip install --no-cache-dir grpcio-tools && \
+    mkdir -p prometheus_persister/proto && \
     python -m grpc_tools.protoc \
         -I proto \
         --python_out=prometheus_persister/proto \
