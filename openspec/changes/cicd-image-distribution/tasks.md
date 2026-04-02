@@ -14,7 +14,7 @@
 
 ## 3. Docker Compose
 
-- [ ] 3.1 Create `docker-compose.yml` with prometheus-persister service — depends_on kafka (service_healthy), environment variables for Kafka and Remote-Write, port 8000, health check with Delta-V timing parameters
+- [x] 3.1 Create `docker-compose.yml` with prometheus-persister service — depends_on kafka (service_healthy), environment variables for Kafka and Remote-Write, port 8000, health check with Delta-V timing parameters
 
 ## 4. CI Workflow
 
