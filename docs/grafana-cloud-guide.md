@@ -130,3 +130,78 @@ If you prefer environment variables (e.g., for Docker), use these instead of a c
 | `REMOTE_WRITE_PASSWORD` | `glc_eyJ...` |
 
 Environment variables override `config.yaml` values, so you can use a base config file and override secrets via env vars in production.
+
+## Step 3: Deploy
+
+### Option A: Docker Compose (alongside Delta-V)
+
+Add the persister to your existing Delta-V `docker-compose.yml`:
+
+```yaml
+  prometheus-persister:
+    image: ghcr.io/mhuot/prometheus-persister:latest
+    container_name: delta-v-prometheus-persister
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      REMOTE_WRITE_URL: "https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push"
+      REMOTE_WRITE_USERNAME: "123456"
+      REMOTE_WRITE_PASSWORD: "glc_eyJ..."
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/metrics || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+```
+
+Then start it:
+
+```bash
+docker compose up -d prometheus-persister
+```
+
+### Option B: Standalone Docker Run
+
+If you're not using Docker Compose:
+
+```bash
+docker run -d \
+  --name prometheus-persister \
+  -e KAFKA_BOOTSTRAP_SERVERS=your-kafka-broker:9092 \
+  -e REMOTE_WRITE_URL="https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push" \
+  -e REMOTE_WRITE_USERNAME="123456" \
+  -e REMOTE_WRITE_PASSWORD="glc_eyJ..." \
+  -p 8000:8000 \
+  ghcr.io/mhuot/prometheus-persister:latest
+```
+
+> **Network note:** The container must be able to reach both the Kafka broker and `grafana.net` on port 443. If Kafka is on a Docker network, use `--network <delta-v-network>`.
+
+### Option C: Standalone Python
+
+For running directly on a host with Kafka access:
+
+```bash
+# Clone and install
+git clone https://github.com/mhuot/prometheus-persister.git
+cd prometheus-persister
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+
+# Generate protobuf bindings
+pip install grpcio-tools
+make proto
+
+# Create your config (edit with your values from Steps 1-2)
+cp config.yaml config.local.yaml
+# Edit config.local.yaml with your Kafka and Grafana Cloud settings
+
+# Run
+python -m prometheus_persister config.local.yaml
+```
