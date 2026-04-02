@@ -9,7 +9,7 @@
 
 ## 2. Build Context
 
-- [ ] 2.1 Create `.dockerignore` excluding `.git/`, `.venv/`, `tests/`, `__pycache__/`, `*.md`, `.github/`, `.claude/`, `.gemini/`, `openspec/`, IDE configs
+- [x] 2.1 Create `.dockerignore` excluding `.git/`, `.venv/`, `tests/`, `__pycache__/`, `*.md`, `.github/`, `.claude/`, `.gemini/`, `openspec/`, IDE configs
 - [ ] 2.2 Update Makefile — add `image` target using `docker buildx build` with build args, add `push` target, update `clean` target
 
 ## 3. Docker Compose
