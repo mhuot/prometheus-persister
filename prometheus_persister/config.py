@@ -120,9 +120,7 @@ def validate_config(config: PersisterConfig) -> None:
         raise ValueError("observability.metrics_port must be between 1 and 65535")
 
     if config.remote_write.username and not config.remote_write.password:
-        raise ValueError(
-            "remote_write.password is required when username is provided"
-        )
+        raise ValueError("remote_write.password is required when username is provided")
 
 
 def load_config(config_path: str = "config.yaml") -> PersisterConfig:

@@ -32,13 +32,9 @@ def _build_write_request(samples: list[PrometheusSample]) -> bytes:
 
         if metric_key not in series_map:
             time_series = TimeSeries()
-            time_series.labels.append(
-                Label(name="__name__", value=sample.metric_name)
-            )
+            time_series.labels.append(Label(name="__name__", value=sample.metric_name))
             for label_name, label_value in sorted(sample.labels.items()):
-                time_series.labels.append(
-                    Label(name=label_name, value=label_value)
-                )
+                time_series.labels.append(Label(name=label_name, value=label_value))
             series_map[metric_key] = time_series
 
         series_map[metric_key].samples.append(
@@ -167,9 +163,7 @@ class RemoteWriteClient:
                 last_status_code = response.status_code
 
                 if response.status_code in (200, 204):
-                    logger.debug(
-                        "Remote-Write success: %d samples", sample_count
-                    )
+                    logger.debug("Remote-Write success: %d samples", sample_count)
                     return last_status_code
 
                 if response.status_code == 429:
@@ -178,9 +172,7 @@ class RemoteWriteClient:
                         delay = float(retry_after)
                     else:
                         delay = 2**attempt
-                    logger.warning(
-                        "Rate limited (429), retrying in %.1fs", delay
-                    )
+                    logger.warning("Rate limited (429), retrying in %.1fs", delay)
                     time.sleep(delay)
                     continue
 

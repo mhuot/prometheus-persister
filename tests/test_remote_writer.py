@@ -136,15 +136,11 @@ class TestRetryLogic:
 
 class TestAuthentication:
     def test_bearer_token_in_headers(self):
-        config = _make_config(
-            remote_write={"bearer_token": "my-token"}
-        )
+        config = _make_config(remote_write={"bearer_token": "my-token"})
         client = RemoteWriteClient(config=config)
         assert client._session.headers["Authorization"] == "Bearer my-token"
 
     def test_basic_auth_configured(self):
-        config = _make_config(
-            remote_write={"username": "user", "password": "pass"}
-        )
+        config = _make_config(remote_write={"username": "user", "password": "pass"})
         client = RemoteWriteClient(config=config)
         assert client._session.auth == ("user", "pass")

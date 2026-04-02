@@ -52,9 +52,7 @@ class ChunkReassembler:
         buffer.chunks[chunk_number] = content
 
         if buffer.is_complete:
-            complete_payload = b"".join(
-                buffer.chunks[i] for i in range(total_chunks)
-            )
+            complete_payload = b"".join(buffer.chunks[i] for i in range(total_chunks))
             del self._buffers[message_id]
             return complete_payload
 

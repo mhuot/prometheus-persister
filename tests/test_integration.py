@@ -124,9 +124,7 @@ class TestEndToEnd:
         assert len(write_request.timeseries) == 1
 
         time_series = write_request.timeseries[0]
-        label_map = {
-            label.name: label.value for label in time_series.labels
-        }
+        label_map = {label.name: label.value for label in time_series.labels}
         assert label_map["__name__"] == "mib2_ifInOctets"
         assert label_map["host_id"] == "42"
         assert label_map["deltav_location"] == "NYC"
