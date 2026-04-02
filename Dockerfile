@@ -4,7 +4,7 @@ ARG REVISION=unknown
 ARG SOURCE=https://github.com/mhuot/prometheus-persister
 ARG BUILD_BRANCH=unknown
 
-FROM python:3.11-slim AS builder
+FROM python:3.14-slim AS builder
 
 WORKDIR /app
 
@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir grpcio-tools && \
         proto/collectionset.proto \
         proto/remote_write.proto
 
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 WORKDIR /app
 
