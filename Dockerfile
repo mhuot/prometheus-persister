@@ -29,8 +29,10 @@ FROM python:3.11-slim
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends librdkafka1 libsnappy1v5 && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends librdkafka1 libsnappy1v5 curl && \
+    rm -rf /var/lib/apt/lists/* && \
+    groupadd -g 10001 persister && \
+    useradd -u 10001 -g persister -s /sbin/nologin -M persister
 
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
@@ -54,6 +56,8 @@ LABEL org.opencontainers.image.title="prometheus-persister" \
       org.opencontainers.image.vendor="Delta-V" \
       org.opencontainers.image.licenses="Apache-2.0" \
       org.opennms.cicd.branch="${BUILD_BRANCH}"
+
+USER persister
 
 EXPOSE 8000
 
