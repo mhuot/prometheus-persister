@@ -85,3 +85,48 @@ You now have three values. Record them for the next step:
 | Remote-Write URL | `REMOTE_WRITE_URL` | `https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push` |
 | Instance ID | `REMOTE_WRITE_USERNAME` | `123456` |
 | API Key | `REMOTE_WRITE_PASSWORD` | `glc_eyJ...` |
+
+## Step 2: Configure the Persister
+
+### Option A: config.yaml
+
+Create a `config.yaml` with your Delta-V Kafka and Grafana Cloud credentials:
+
+```yaml
+kafka:
+  bootstrap_servers: "your-kafka-broker:9092"  # Delta-V Kafka address
+  consumer_group: "prometheus-persister"
+  topic: "OpenNMS.Sink.CollectionSet"
+
+remote_write:
+  url: "https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push"
+  username: "123456"          # Your Grafana Cloud instance ID
+  password: "glc_eyJ..."     # Your Grafana Cloud API key
+  timeout: 30
+  max_retries: 3
+
+batching:
+  max_size: 1000
+  flush_interval: 5
+
+chunk_reassembly:
+  ttl: 60
+
+observability:
+  metrics_port: 8000
+```
+
+Replace the `kafka.bootstrap_servers`, `remote_write.url`, `remote_write.username`, and `remote_write.password` with your actual values.
+
+### Option B: Environment Variables
+
+If you prefer environment variables (e.g., for Docker), use these instead of a config file:
+
+| Variable | Value |
+|:---|:---|
+| `KAFKA_BOOTSTRAP_SERVERS` | `your-kafka-broker:9092` |
+| `REMOTE_WRITE_URL` | `https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push` |
+| `REMOTE_WRITE_USERNAME` | `123456` |
+| `REMOTE_WRITE_PASSWORD` | `glc_eyJ...` |
+
+Environment variables override `config.yaml` values, so you can use a base config file and override secrets via env vars in production.
