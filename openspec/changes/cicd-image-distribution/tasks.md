@@ -32,8 +32,8 @@
 
 ## 6. Proto Contract Check
 
-- [ ] 6.1 Create `.github/workflows/proto-check.yml` — scheduled weekly (cron) and manual `workflow_dispatch`, fetches `sink-message.proto` and `collectionset.proto` from delta-v `main` branch, regenerates Python bindings, runs `pytest` against them
-- [ ] 6.2 Add step to open a GitHub issue automatically if tests fail, with title "Proto contract break detected" and the failing test output in the body
+- [x] 6.1 Create `.github/workflows/proto-check.yml` — scheduled weekly (cron) and manual `workflow_dispatch`, fetches `sink-message.proto` and `collectionset.proto` from delta-v `main` branch, regenerates Python bindings, runs `pytest` against them
+- [x] 6.2 Add step to open a GitHub issue automatically if tests fail, with title "Proto contract break detected" and the failing test output in the body
 
 ## 7. Documentation
 
