@@ -205,3 +205,56 @@ cp config.yaml config.local.yaml
 # Run
 python -m prometheus_persister config.local.yaml
 ```
+
+## Step 4: Verify Metrics Flow
+
+Verify each stage incrementally to isolate issues.
+
+### 4a. Check the persister is running
+
+```bash
+curl -s http://localhost:8000/metrics | grep prometheus_persister
+```
+
+You should see counters like:
+
+```
+prometheus_persister_messages_consumed_total 42
+prometheus_persister_samples_written_total 168
+```
+
+If `messages_consumed` is `0`, the persister isn't receiving messages from Kafka. See [Troubleshooting](#troubleshooting).
+
+If `messages_consumed` is increasing but `samples_written` is `0`, check for `write_errors`:
+
+```bash
+curl -s http://localhost:8000/metrics | grep write_errors
+```
+
+### 4b. Check Kafka connectivity
+
+Verify the CollectionSet topic has messages:
+
+```bash
+# From a host with kafka-console-consumer or kcat installed
+kcat -b your-kafka-broker:9092 -t OpenNMS.Sink.CollectionSet -C -c 1 -e -q | wc -c
+```
+
+If this returns `0`, Minions are not publishing to Kafka.
+
+### 4c. Verify metrics in Grafana Cloud
+
+1. Open your Grafana Cloud instance (e.g., `https://your-org.grafana.net`)
+2. Go to **Explore** (compass icon in the left sidebar)
+3. Select your **Prometheus** data source
+4. Run this PromQL query:
+   ```
+   {host_id!=""}
+   ```
+5. You should see time-series with Delta-V labels:
+
+   ```
+   mib2_interfaces_ifInOctets{host_id="42", host_name="router1", deltav_location="Default", deltav_instance="eth0"}
+   ```
+
+If no results appear, wait 1-2 minutes for the first batch to flush, then retry. If still empty, check the persister logs for Remote-Write errors.
