@@ -37,7 +37,7 @@
 
 ## 7. Documentation
 
-- [ ] 7.1 Update README.md — add CI badge, update Docker section with new build/run commands, document release process and image registries
-- [ ] 7.2 Update README.md — document Docker Compose usage and Delta-V stack integration
-- [ ] 7.3 Update README.md — add "Configuring Secrets" section with step-by-step instructions for setting up `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` in GitHub repo settings, and explain that GHCR uses the built-in `GITHUB_TOKEN` automatically
-- [ ] 7.4 Update README.md — document the weekly proto contract check workflow and what to do when a break is detected
+- [x] 7.1 Update README.md — add CI badge, update Docker section with new build/run commands, document release process and image registries
+- [x] 7.2 Update README.md — document Docker Compose usage and Delta-V stack integration
+- [x] 7.3 Update README.md — add "Configuring Secrets" section with step-by-step instructions for setting up `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` in GitHub repo settings, and explain that GHCR uses the built-in `GITHUB_TOKEN` automatically
+- [x] 7.4 Update README.md — document the weekly proto contract check workflow and what to do when a break is detected

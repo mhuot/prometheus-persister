@@ -1,5 +1,8 @@
 # Prometheus Persister
 
+[![CI](https://github.com/mhuot/prometheus-persister/actions/workflows/ci.yml/badge.svg)](https://github.com/mhuot/prometheus-persister/actions/workflows/ci.yml)
+[![Proto Check](https://github.com/mhuot/prometheus-persister/actions/workflows/proto-check.yml/badge.svg)](https://github.com/mhuot/prometheus-persister/actions/workflows/proto-check.yml)
+
 A standalone Python service that bridges Delta-V performance metrics from Kafka to Prometheus-compatible stores via Remote-Write.
 
 ## Overview
@@ -266,17 +269,46 @@ python -m prometheus_persister
 ### Run with Docker
 
 ```bash
+# Build locally
+make image
+
+# Or build directly
 docker build -t prometheus-persister .
+
+# Run
 docker run -e KAFKA_BOOTSTRAP_SERVERS=kafka:9092 \
            -e REMOTE_WRITE_URL=http://mimir:9009/api/v1/push \
            -p 8000:8000 \
            prometheus-persister
 ```
 
-### Run with Docker Compose (Delta-V stack)
+### Run with Docker Compose
+
+The included `docker-compose.yml` provides a Kafka broker and the persister for local development:
 
 ```bash
+# Start everything (Kafka + persister)
+docker compose up
+
+# Or just the persister (if Kafka is already running)
 docker compose up prometheus-persister
+```
+
+Set `REMOTE_WRITE_URL` to point at your Prometheus-compatible endpoint:
+
+```bash
+REMOTE_WRITE_URL=http://mimir:9009/api/v1/push docker compose up
+```
+
+### Adding to the Delta-V Stack
+
+Copy the `prometheus-persister` service block from `docker-compose.yml` into the Delta-V `opennms-container/delta-v/docker-compose.yml`, adjusting `KAFKA_BOOTSTRAP_SERVERS` and `REMOTE_WRITE_URL` for the target environment.
+
+### Pull Pre-built Images
+
+```bash
+docker pull ghcr.io/mhuot/prometheus-persister:latest
+docker pull ghcr.io/mhuot/prometheus-persister:0.1.0  # specific version
 ```
 
 ## Project Structure
@@ -332,6 +364,52 @@ pytest
 black prometheus_persister tests
 pylint prometheus_persister
 ```
+
+## Releasing
+
+Releases are triggered by pushing a git tag:
+
+```bash
+git tag v0.1.0
+git push --tags
+```
+
+The [release workflow](.github/workflows/release.yml) will:
+1. Run the full test suite
+2. Build multi-arch images (amd64 + arm64) via Docker BuildX
+3. Push to GHCR (`ghcr.io/mhuot/prometheus-persister`)
+4. Optionally push to Docker Hub (if secrets are configured)
+
+Images are tagged with the version (e.g., `0.1.0`) and `latest`.
+
+### Configuring Secrets
+
+**GHCR (GitHub Container Registry)** works automatically — the built-in `GITHUB_TOKEN` has `packages:write` permission configured in the workflow.
+
+**Docker Hub** (optional) requires two repository secrets:
+
+1. Go to **Settings > Secrets and variables > Actions** in your GitHub repo
+2. Add `DOCKERHUB_USERNAME` — your Docker Hub username
+3. Add `DOCKERHUB_TOKEN` — a Docker Hub [access token](https://hub.docker.com/settings/security) (not your password)
+
+If these secrets are not set, the release workflow skips Docker Hub and only pushes to GHCR.
+
+## Proto Contract Check
+
+A [weekly workflow](.github/workflows/proto-check.yml) (Monday 6am UTC) validates that the prometheus-persister test suite still passes against the latest Delta-V proto files. This detects breaking schema changes in `sink-message.proto` or `collectionset.proto` before they hit production.
+
+If a break is detected, the workflow automatically opens a GitHub issue with the failing test output and remediation steps.
+
+You can also run it manually from the **Actions** tab > **Proto Contract Check** > **Run workflow**.
+
+### When a Proto Break is Detected
+
+1. Review the opened GitHub issue for the failing test output
+2. Fetch the updated protos: check the Delta-V repo for what changed
+3. Update `proto/` files and regenerate bindings: `make proto`
+4. Fix any broken transformer/consumer code
+5. Run tests locally: `pytest`
+6. Commit and close the issue
 
 ## License
 
