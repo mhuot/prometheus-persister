@@ -28,9 +28,9 @@ jobs:
       - name: Fetch latest proto files from delta-v
         run: |
           curl -sf -o proto/sink-message.proto \
-            "https://raw.githubusercontent.com/mhuot/delta-v/main/core/ipc/sink/common/src/main/proto/sink-message.proto"
+            "https://raw.githubusercontent.com/mhuot/delta-v/develop/core/ipc/sink/common/src/main/proto/sink-message.proto"
           curl -sf -o proto/collectionset.proto \
-            "https://raw.githubusercontent.com/mhuot/delta-v/main/features/kafka/producer/src/main/proto/collectionset.proto"
+            "https://raw.githubusercontent.com/mhuot/delta-v/develop/features/kafka/producer/src/main/proto/collectionset.proto"
 
       - name: Regenerate protobuf bindings
         run: make proto
