@@ -50,3 +50,38 @@ Before starting, ensure you have:
   - Delta-V's Kafka brokers (default port 9092)
   - Grafana Cloud's Mimir endpoint (HTTPS, port 443)
 - **Docker** (for container deployment) or **Python 3.11+** (for standalone deployment)
+
+## Step 1: Grafana Cloud Setup
+
+You need three values from Grafana Cloud: the **Remote-Write URL**, your **instance ID** (username), and an **API key** (password).
+
+### Find Your Remote-Write Endpoint
+
+1. Log in to [grafana.com](https://grafana.com) and open your Grafana Cloud portal
+2. In the left sidebar, click **Infrastructure > Prometheus**
+3. Under **Prometheus Details**, locate the **Remote Write Endpoint**. It looks like:
+   ```
+   https://prometheus-prod-XX-prod-us-east-0.grafana.net/api/prom/push
+   ```
+4. Copy this URL — this is your `REMOTE_WRITE_URL`
+5. On the same page, note the **Username / Instance ID** (a numeric value like `123456`). This is your `REMOTE_WRITE_USERNAME`
+
+### Create an API Key
+
+1. In the Grafana Cloud portal, go to **Security > Access Policies**
+2. Click **Create access policy**
+3. Name it `prometheus-persister` and grant the **metrics:write** scope
+4. Click **Create token** under the new policy
+5. Copy the generated token — this is your `REMOTE_WRITE_PASSWORD`
+
+> **Keep this token safe.** It cannot be displayed again after creation. If lost, create a new one.
+
+### Verify Your Credentials
+
+You now have three values. Record them for the next step:
+
+| Value | Environment Variable | Example |
+|:---|:---|:---|
+| Remote-Write URL | `REMOTE_WRITE_URL` | `https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push` |
+| Instance ID | `REMOTE_WRITE_USERNAME` | `123456` |
+| API Key | `REMOTE_WRITE_PASSWORD` | `glc_eyJ...` |

@@ -1,7 +1,7 @@
 ## 1. Guide Document
 
 - [x] 1.1 Create `docs/grafana-cloud-guide.md` with title, overview, and prerequisites section (Delta-V with Kafka, Grafana Cloud account, Docker or Python 3.11+)
-- [ ] 1.2 Write "Grafana Cloud Setup" section — step-by-step for locating the Mimir Remote-Write endpoint URL, creating an API key with MetricsPublisher role, and noting the instance ID for basic auth
+- [x] 1.2 Write "Grafana Cloud Setup" section — step-by-step for locating the Mimir Remote-Write endpoint URL, creating an API key with MetricsPublisher role, and noting the instance ID for basic auth
 - [ ] 1.3 Write "Configure the Persister" section — complete `config.yaml` example with Grafana Cloud auth, plus equivalent environment variable table
 - [ ] 1.4 Write "Deploy with Docker" section — docker-compose service block for adding to Delta-V stack, standalone `docker run` command, and pre-built image pull instructions
 - [ ] 1.5 Write "Deploy Standalone" section — venv setup, pip install, proto generation, config, and run commands
