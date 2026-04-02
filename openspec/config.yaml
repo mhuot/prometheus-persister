@@ -1,20 +1,29 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Mermaid diagram style guide (apply to all diagrams):
+  - Direction: top-to-bottom (TB) for flowcharts, left-to-right (LR) for architecture
+  - Keep diagrams simple: max 8-10 nodes. Split into multiple if larger.
+  - Use clear, plain-language labels (not technical IDs)
+  - Use subgraphs to group related components
+  - Rounded boxes for user actions, rectangles for system components
+  - Dotted lines (-.->) for optional/async flows, solid lines (-->) for primary flows
+  - Diagrams should align to WCAG 2.1 AA standards for accessibility
+  - Diagrams should be clear and readable in dark or light mode
+  
+  Git workflow: atomic commits per task
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+rules:
+  proposal:
+    - Include a Mermaid flowchart showing the high-level user flow or system interaction
+  design:
+    - Include Mermaid diagrams to illustrate architecture and data flow
+    - Use sequence diagrams for API/service interactions
+    - Use flowcharts for user flows and decision logic
+    - Include a Deployment section with setup steps
+  tasks:
+    - Always include a Documentation task group at the end
+    - Documentation tasks should cover README updates, API docs, and setup guides
+    - Each task must be a single atomic commit
+    - Commit and push after each completed task checkbox
+    - Use conventional commit format
