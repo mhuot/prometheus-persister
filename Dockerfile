@@ -1,3 +1,9 @@
+ARG VERSION=dev
+ARG BUILD_DATE=unknown
+ARG REVISION=unknown
+ARG SOURCE=https://github.com/mhuot/prometheus-persister
+ARG BUILD_BRANCH=unknown
+
 FROM python:3.11-slim AS builder
 
 WORKDIR /app
@@ -32,6 +38,22 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY prometheus_persister/ prometheus_persister/
 COPY --from=builder /app/prometheus_persister/proto/ prometheus_persister/proto/
 COPY config.yaml .
+
+ARG VERSION
+ARG BUILD_DATE
+ARG REVISION
+ARG SOURCE
+ARG BUILD_BRANCH
+
+LABEL org.opencontainers.image.title="prometheus-persister" \
+      org.opencontainers.image.description="Delta-V Kafka to Prometheus bridge via Remote-Write" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${REVISION}" \
+      org.opencontainers.image.source="${SOURCE}" \
+      org.opencontainers.image.vendor="Delta-V" \
+      org.opencontainers.image.licenses="Apache-2.0" \
+      org.opennms.cicd.branch="${BUILD_BRANCH}"
 
 EXPOSE 8000
 
