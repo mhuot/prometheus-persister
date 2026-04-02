@@ -19,4 +19,4 @@
 
 ## 3. Documentation
 
-- [ ] 3.1 Commit and push all changes
+- [x] 3.1 Commit and push all changes
