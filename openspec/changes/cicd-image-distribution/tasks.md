@@ -24,11 +24,11 @@
 
 ## 5. Release Workflow
 
-- [ ] 5.1 Create `.github/workflows/release.yml` — trigger on tags matching `v*`
-- [ ] 5.2 Add test step: checkout, setup Python, install, proto gen, pytest (gates the release)
-- [ ] 5.3 Add Docker BuildX setup with QEMU for multi-arch (amd64 + arm64)
-- [ ] 5.4 Add GHCR login using `GITHUB_TOKEN` and optional Docker Hub login using secrets
-- [ ] 5.5 Add build-and-push step with version tag (stripped `v` prefix) and `latest` tag, passing OCI label build args from git context
+- [x] 5.1 Create `.github/workflows/release.yml` — trigger on tags matching `v*`
+- [x] 5.2 Add test step: checkout, setup Python, install, proto gen, pytest (gates the release)
+- [x] 5.3 Add Docker BuildX setup with QEMU for multi-arch (amd64 + arm64)
+- [x] 5.4 Add GHCR login using `GITHUB_TOKEN` and optional Docker Hub login using secrets
+- [x] 5.5 Add build-and-push step with version tag (stripped `v` prefix) and `latest` tag, passing OCI label build args from git context
 
 ## 6. Proto Contract Check
 
