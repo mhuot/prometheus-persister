@@ -207,6 +207,83 @@ flowchart TB
     style OTLP fill:#8B6914,stroke:#6d5210,color:#FFFFFF
 ```
 
+## Integration
+
+The prometheus-persister connects a **source** (Delta-V Kafka) to a **target** (any Prometheus-compatible Remote-Write endpoint).
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#3B6EA5', 'primaryTextColor': '#1a1a1a', 'primaryBorderColor': '#2d5580', 'lineColor': '#6B7280', 'background': 'transparent', 'mainBkg': 'transparent', 'edgeLabelBackground': 'transparent'}}}%%
+flowchart LR
+    subgraph source ["Source: Delta-V"]
+        KFK[/"Kafka\nCollectionSet Topic"/]
+    end
+
+    PP["Prometheus\nPersister"]
+
+    subgraph target ["Target: Prometheus Store"]
+        RW["Remote-Write\nEndpoint"]
+    end
+
+    KFK --> PP -->|"Remote-Write v1\nprotobuf + snappy"| RW
+
+    style source fill:transparent,stroke:#6B7280,stroke-width:1px
+    style target fill:transparent,stroke:#6B7280,stroke-width:1px
+    style KFK fill:#8B6914,stroke:#6d5210,color:#FFFFFF
+    style PP fill:#3B6EA5,stroke:#2d5580,color:#FFFFFF
+    style RW fill:#7B4B94,stroke:#5e3972,color:#FFFFFF
+```
+
+### Supported Targets
+
+Any Prometheus-compatible Remote-Write endpoint works. Here are the common ones:
+
+| Target | Remote-Write URL | Auth |
+|:---|:---|:---|
+| **Prometheus** | `http://prometheus:9090/api/v1/write` | None (or reverse proxy) |
+| **Grafana Mimir** | `http://mimir:9009/api/v1/push` | Bearer token or basic auth |
+| **Grafana Cloud** | `https://prometheus-prod-XX-....grafana.net/api/prom/push` | Basic auth (instance ID + API key) |
+| **VictoriaMetrics** | `http://victoriametrics:8428/api/v1/write` | None (or basic auth) |
+| **Thanos Receive** | `http://thanos-receive:19291/api/v1/receive` | None (or bearer token) |
+
+Configure via `config.yaml` or environment variables:
+
+```bash
+# Prometheus (no auth)
+REMOTE_WRITE_URL=http://prometheus:9090/api/v1/write
+
+# Grafana Cloud (basic auth)
+REMOTE_WRITE_URL=https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom/push
+REMOTE_WRITE_USERNAME=123456
+REMOTE_WRITE_PASSWORD=glc_eyJ...
+
+# VictoriaMetrics (no auth)
+REMOTE_WRITE_URL=http://victoriametrics:8428/api/v1/write
+
+# Thanos Receive (bearer token)
+REMOTE_WRITE_URL=http://thanos-receive:19291/api/v1/receive
+REMOTE_WRITE_BEARER_TOKEN=my-token
+```
+
+### Connecting to Delta-V
+
+The persister consumes from the `OpenNMS.Sink.CollectionSet` Kafka topic. To find your Delta-V Kafka brokers:
+
+1. Check the Delta-V `docker-compose.yml` for the `kafka` service and its advertised listeners
+2. Or check a Minion's configuration for `KAFKA_IPC_BOOTSTRAP_SERVERS`
+
+Quick connectivity test:
+
+```bash
+# Verify the topic exists and has data
+kcat -b your-kafka-broker:9092 -t OpenNMS.Sink.CollectionSet -C -c 1 -e -q | wc -c
+```
+
+If this returns a non-zero value, Kafka is reachable and Minions are publishing metrics.
+
+### Guides
+
+- [Grafana Cloud Integration Guide](docs/grafana-cloud-guide.md) — complete walkthrough from setup to dashboards
+
 ## Configuration
 
 Configuration is loaded from `config.yaml` with environment variable overrides:

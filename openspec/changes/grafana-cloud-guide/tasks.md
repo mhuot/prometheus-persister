@@ -12,10 +12,10 @@
 
 ## 2. README Integration Section
 
-- [ ] 2.1 Add "Integration" section to README.md — generalized overview explaining the source (Delta-V Kafka) and target (any Prometheus-compatible Remote-Write endpoint) architecture with a Mermaid diagram
-- [ ] 2.2 Add "Supported Targets" subsection — configuration examples for Prometheus, Grafana Mimir, VictoriaMetrics, and Thanos, each showing the Remote-Write URL format and auth pattern
-- [ ] 2.3 Add "Connecting to Delta-V" subsection — how to find/verify the Kafka bootstrap servers and CollectionSet topic in an existing Delta-V deployment, including a quick connectivity test command
-- [ ] 2.4 Add "Guides" subsection — link to `docs/grafana-cloud-guide.md` and note that target-specific guides live in `docs/`
+- [x] 2.1 Add "Integration" section to README.md — generalized overview explaining the source (Delta-V Kafka) and target (any Prometheus-compatible Remote-Write endpoint) architecture with a Mermaid diagram
+- [x] 2.2 Add "Supported Targets" subsection — configuration examples for Prometheus, Grafana Mimir, VictoriaMetrics, and Thanos, each showing the Remote-Write URL format and auth pattern
+- [x] 2.3 Add "Connecting to Delta-V" subsection — how to find/verify the Kafka bootstrap servers and CollectionSet topic in an existing Delta-V deployment, including a quick connectivity test command
+- [x] 2.4 Add "Guides" subsection — link to `docs/grafana-cloud-guide.md` and note that target-specific guides live in `docs/`
 
 ## 3. Documentation
 
