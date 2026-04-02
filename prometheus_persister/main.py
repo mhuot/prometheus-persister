@@ -24,7 +24,7 @@ def main() -> None:
         logger.error("Configuration error: %s", error)
         sys.exit(1)
 
-    instruments = init_observability(config.observability.metrics_port)
+    init_observability(config.observability.metrics_port)
 
     remote_writer = RemoteWriteClient(config=config)
 

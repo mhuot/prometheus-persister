@@ -44,6 +44,7 @@ target-version = ["py311"]
 [tool.pylint.main]
 max-line-length = 88
 disable = ["C0114", "C0115", "C0116"]
+ignore-patterns = [".*_pb2\\.py"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
