@@ -16,6 +16,7 @@ context: |
 rules:
   proposal:
     - Include a Mermaid flowchart showing the high-level user flow or system interaction
+    - After creating a proposal, commit and push all change artifacts before continuing to the next artifact
   design:
     - Include Mermaid diagrams to illustrate architecture and data flow
     - Use sequence diagrams for API/service interactions
