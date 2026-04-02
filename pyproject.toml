@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prometheus-persister"
+version = "0.1.0"
+description = "Kafka-to-Prometheus bridge for Delta-V performance metrics via Remote-Write"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+dependencies = [
+    "confluent-kafka>=2.3.0",
+    "protobuf>=4.25.0",
+    "python-snappy>=0.7.0",
+    "requests>=2.31.0",
+    "pyyaml>=6.0",
+    "opentelemetry-api>=1.22.0",
+    "opentelemetry-sdk>=1.22.0",
+    "opentelemetry-exporter-prometheus>=0.43b0",
+    "opentelemetry-exporter-otlp>=1.22.0",
+    "python-json-logger>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-mock>=3.12.0",
+    "black>=24.0.0",
+    "pylint>=3.0.0",
+    "grpcio-tools>=1.60.0",
+]
+
+[project.scripts]
+prometheus-persister = "prometheus_persister.main:main"
+
+[tool.setuptools.packages.find]
+include = ["prometheus_persister*"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.pylint.main]
+max-line-length = 88
+disable = ["C0114", "C0115", "C0116"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

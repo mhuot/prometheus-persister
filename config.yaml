@@ -1,0 +1,38 @@
+# Prometheus Persister Configuration
+# Environment variables override YAML values where noted.
+
+kafka:
+  # Kafka broker addresses (env: KAFKA_BOOTSTRAP_SERVERS)
+  bootstrap_servers: "localhost:9092"
+  # Consumer group ID (env: KAFKA_CONSUMER_GROUP)
+  consumer_group: "prometheus-persister"
+  # Kafka topic to consume from
+  topic: "OpenNMS.Sink.CollectionSet"
+
+remote_write:
+  # Prometheus Remote-Write endpoint URL (env: REMOTE_WRITE_URL)
+  url: "http://localhost:9090/api/v1/write"
+  # Basic auth credentials (env: REMOTE_WRITE_USERNAME, REMOTE_WRITE_PASSWORD)
+  # username: ""
+  # password: ""
+  # Bearer token auth (env: REMOTE_WRITE_BEARER_TOKEN)
+  # bearer_token: ""
+  # HTTP request timeout in seconds
+  timeout: 30
+  # Maximum retry attempts for transient failures
+  max_retries: 3
+
+batching:
+  # Maximum number of samples per batch before flushing
+  max_size: 1000
+  # Maximum seconds between flushes
+  flush_interval: 5
+
+chunk_reassembly:
+  # Seconds before incomplete chunked messages are evicted
+  ttl: 60
+
+observability:
+  # Port for the Prometheus /metrics endpoint
+  metrics_port: 8000
+  # Set OTEL_EXPORTER_OTLP_ENDPOINT env var to enable OTLP export
