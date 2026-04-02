@@ -61,4 +61,9 @@ USER persister
 
 EXPOSE 8000
 
+STOPSIGNAL SIGTERM
+
+HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=30s \
+    CMD curl -sf http://localhost:8000/metrics || exit 1
+
 ENTRYPOINT ["python", "-m", "prometheus_persister"]

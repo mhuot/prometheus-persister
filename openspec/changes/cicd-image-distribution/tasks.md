@@ -2,8 +2,8 @@
 
 - [x] 1.1 Add OCI labels to Dockerfile via `ARG`/`LABEL` — `org.opencontainers.image.version`, `.created`, `.revision`, `.source`, `.title`, `.vendor`, `.licenses`
 - [x] 1.2 Create non-root user `persister` (UID 10001, GID 10001) in the final stage and set `USER persister`
-- [ ] 1.3 Add `STOPSIGNAL SIGTERM` to the Dockerfile
-- [ ] 1.4 Add `HEALTHCHECK` instruction using `curl -sf http://localhost:8000/metrics || exit 1` with `interval=15s`, `timeout=5s`, `retries=3`, `start_period=30s`
+- [x] 1.3 Add `STOPSIGNAL SIGTERM` to the Dockerfile
+- [x] 1.4 Add `HEALTHCHECK` instruction using `curl -sf http://localhost:8000/metrics || exit 1` with `interval=15s`, `timeout=5s`, `retries=3`, `start_period=30s`
 - [ ] 1.5 Create `entrypoint.sh` wrapper script — handles `CONFIG_PATH` env var override, exec's `python -m prometheus_persister`
 - [ ] 1.6 Update Dockerfile to `COPY entrypoint.sh` and use `ENTRYPOINT ["/app/entrypoint.sh"]`
 
