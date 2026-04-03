@@ -244,6 +244,7 @@ Any Prometheus-compatible Remote-Write endpoint works. Here are the common ones:
 | **Grafana Cloud** | `https://prometheus-prod-XX-....grafana.net/api/prom/push` | Basic auth (instance ID + API key) |
 | **VictoriaMetrics** | `http://victoriametrics:8428/api/v1/write` | None (or basic auth) |
 | **Thanos Receive** | `http://thanos-receive:19291/api/v1/receive` | None (or bearer token) |
+| **Cortex** | `http://cortex:9009/api/v1/push` | Bearer token or basic auth |
 
 Configure via `config.yaml` or environment variables:
 
@@ -261,6 +262,10 @@ REMOTE_WRITE_URL=http://victoriametrics:8428/api/v1/write
 
 # Thanos Receive (bearer token)
 REMOTE_WRITE_URL=http://thanos-receive:19291/api/v1/receive
+REMOTE_WRITE_BEARER_TOKEN=my-token
+
+# Cortex (bearer token)
+REMOTE_WRITE_URL=http://cortex:9009/api/v1/push
 REMOTE_WRITE_BEARER_TOKEN=my-token
 ```
 
@@ -283,6 +288,7 @@ If this returns a non-zero value, Kafka is reachable and Minions are publishing 
 ### Guides
 
 - [Grafana Cloud Integration Guide](docs/grafana-cloud-guide.md) — complete walkthrough from setup to dashboards
+- [Replacing the Cortex TSS Plugin](docs/replacing-cortex-tss.md) — migrating from the embedded Cortex TSS to the standalone persister
 
 ## Configuration
 
