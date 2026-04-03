@@ -36,6 +36,7 @@ def main() -> None:
     consumer = CollectionSetConsumer(
         config=config,
         message_handler=handle_payload,
+        on_poll=remote_writer.check_flush_interval,
     )
 
     def shutdown_handler(signum, frame):  # pylint: disable=unused-argument
