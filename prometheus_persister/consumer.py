@@ -88,9 +88,11 @@ class CollectionSetConsumer:
         self,
         config: PersisterConfig,
         message_handler: Callable[[bytes], None],
+        on_poll: Optional[Callable[[], None]] = None,
     ):
         self._config = config
         self._message_handler = message_handler
+        self._on_poll = on_poll
         self._running = False
 
         self._reassembler = ChunkReassembler(
@@ -122,6 +124,8 @@ class CollectionSetConsumer:
 
         while self._running:
             self._reassembler.evict_stale()
+            if self._on_poll:
+                self._on_poll()
             message = self._consumer.poll(timeout=1.0)
             if message is None:
                 continue
